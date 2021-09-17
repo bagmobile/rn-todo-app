@@ -3,12 +3,12 @@ import {FlatList, Image, StyleSheet, Text, View} from "react-native";
 import {AddToDo} from "../components/AddToDo";
 import {ToDo} from "../components/ToDo";
 
-export const MainScreen = ({todos, addTodo, deleteTodo, changeToDo}) => {
+export const MainScreen = ({todos, addTodo, removeTodo, selectTodo}) => {
 
     const renderItem = ({item}) => <ToDo
         todo={item}
-        onDelete={deleteTodo}
-        onSelect={changeToDo}
+        onRemove={removeTodo}
+        onSelect={selectTodo}
     />;
 
     return (

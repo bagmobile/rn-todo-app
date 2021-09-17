@@ -5,8 +5,9 @@ import {EditModal} from "../components/EditModal";
 import {AppTextBold} from "../components/ui/AppTextBold";
 import {AppButton} from "../components/ui/AppButton";
 import {AntDesign} from "@expo/vector-icons";
+import {DeleteAlert} from "../components/ui/DeleteAlert";
 
-export const ToDoScreen = ({todo, goBack, onDelete, onSave}) => {
+export const ToDoScreen = ({todo, goBack, removeTodo, updateTodo}) => {
 
     const [modal, setModal] = useState(false);
 
@@ -17,7 +18,7 @@ export const ToDoScreen = ({todo, goBack, onDelete, onSave}) => {
                 isVisible={modal}
                 onCancel={() => setModal(false)}
                 onSave={title => {
-                    onSave(todo.id, title);
+                    updateTodo(todo.id, title);
                     setModal(false);
                 }}
             />
@@ -27,7 +28,9 @@ export const ToDoScreen = ({todo, goBack, onDelete, onSave}) => {
                     <AppButton onPress={() => setModal(true)} color={THEME.EDIT_BUTTON_COLOR}>
                         <AntDesign name="edit"/>
                     </AppButton>
-                    <AppButton onPress={() => onDelete(todo.id)} color={THEME.DANGER_COLOR}>
+                    <AppButton onPress={() => {
+                        DeleteAlert(() => removeTodo(todo.id));
+                    }} color={THEME.DANGER_COLOR}>
                         <AntDesign name="delete"/>
                     </AppButton>
                 </View>

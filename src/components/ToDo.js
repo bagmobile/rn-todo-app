@@ -1,13 +1,15 @@
 import React from "react";
 import {StyleSheet, TouchableOpacity, View} from "react-native";
 import {AppText} from "./ui/AppText";
+import {DeleteAlert} from "./ui/DeleteAlert";
 
 
-export const ToDo = ({todo, onDelete, onSelect}) => {
+export const ToDo = ({todo, onRemove, onSelect}) => {
+
     return (
         <TouchableOpacity
             onPress={() => onSelect(todo.id)}
-            onLongPress={() => onDelete(todo.id)}
+            onLongPress={() => DeleteAlert(() => onRemove(todo.id))}
         >
             <View style={styles.container}>
                 <AppText style={styles.text}>{todo.title}</AppText>
