@@ -8,7 +8,7 @@ export const ToDo = ({todo, onRemove, onSelect}) => {
 
     return (
         <TouchableOpacity
-            onPress={() => onSelect(todo.id)}
+            onPress={() => onSelect(todo)}
             onLongPress={() => DeleteAlert(() => onRemove(todo.id))}
         >
             <View style={styles.container}>

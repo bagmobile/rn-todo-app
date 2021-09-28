@@ -1,31 +1,31 @@
-import React, {useReducer} from "react";
+import React, {useContext, useReducer} from "react";
 import {TodoContext} from "./todoContext";
 import {todoReducer} from "./todoReducer";
-import {ADD_TODO, REMOVE_TODO, RESET_TODO, SELECT_TODO, UPDATE_TODO} from "../types";
+import {ADD_TODO, REMOVE_TODO, UPDATE_TODO} from "../types";
+import {ScreenContext} from "../screen/screenContext";
 
 const initialState = {
-    todos: [],
-    activeTodo: null
+    todos: []
 }
 
 export const TodoState = ({children}) => {
     const [state, dispatch] = useReducer(todoReducer, initialState);
+    const {resetTodo} = useContext(ScreenContext);
 
     const addTodo = title => dispatch({type: ADD_TODO, payload: {title}});
     const updateTodo = (id, title) => dispatch({type: UPDATE_TODO, payload: {id, title}});
-    const removeTodo = id => dispatch({type: REMOVE_TODO, payload: {id}});
-    const selectTodo = id => dispatch({type: SELECT_TODO, payload: {id}});
-    const resetTodo = () => dispatch({type: RESET_TODO})
+    const removeTodo = id => {
+        resetTodo();
+        dispatch({type: REMOVE_TODO, payload: {id}});
+    };
+
 
     return (
         <TodoContext.Provider value={{
             todos: state.todos,
-            activeTodo: state.activeTodo,
             addTodo,
             updateTodo,
-            removeTodo,
-            selectTodo,
-            resetTodo
+            removeTodo
         }}>
             {children}
         </TodoContext.Provider>

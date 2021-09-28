@@ -1,9 +1,13 @@
-import React from "react";
-import {FlatList, Image, StyleSheet, Text, View} from "react-native";
+import React, {useContext} from "react";
+import {FlatList, Image, StyleSheet, View} from "react-native";
 import {AddToDo} from "../components/AddToDo";
 import {ToDo} from "../components/ToDo";
+import {TodoContext} from "../context/todo/todoContext";
+import {ScreenContext} from "../context/screen/screenContext";
 
-export const MainScreen = ({todos, addTodo, removeTodo, selectTodo}) => {
+export const MainScreen = () => {
+    const {todos, addTodo, removeTodo} = useContext(TodoContext);
+    const {isSelected, selectTodo} = useContext(ScreenContext);
 
     const renderItem = ({item}) => <ToDo
         todo={item}
@@ -11,7 +15,8 @@ export const MainScreen = ({todos, addTodo, removeTodo, selectTodo}) => {
         onSelect={selectTodo}
     />;
 
-    return (
+
+    return !isSelected && (
         <View style={styles.container}>
             <AddToDo onAddTodo={addTodo}/>
             {todos && <FlatList style={styles.list}

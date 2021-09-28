@@ -6,6 +6,10 @@ import {AntDesign} from "@expo/vector-icons";
 
 export const EditModal = ({value, isVisible, onCancel, onSave}) => {
     const [text, setText] = useState(value);
+    const cancelHandler = () => {
+        onCancel();
+        setText(value);
+    }
     return (
         <Modal
             animationType="fade"
@@ -26,7 +30,7 @@ export const EditModal = ({value, isVisible, onCancel, onSave}) => {
                     <AppButton style={styles.button} onPress={() => onSave(text)} color={THEME.EDIT_BUTTON_COLOR}>
                         <AntDesign name="checkcircleo" size={24}/>
                     </AppButton>
-                    <AppButton style={styles.button} onPress={onCancel} color={THEME.DANGER_COLOR}>
+                    <AppButton style={styles.button} onPress={cancelHandler} color={THEME.DANGER_COLOR}>
                         <AntDesign name="closecircleo" size={24}/>
                     </AppButton>
                 </View>

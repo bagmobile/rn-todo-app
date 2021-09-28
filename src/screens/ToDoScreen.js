@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {StyleSheet, View} from "react-native";
 import {THEME} from "../theme";
 import {EditModal} from "../components/EditModal";
@@ -6,12 +6,16 @@ import {AppTextBold} from "../components/ui/AppTextBold";
 import {AppButton} from "../components/ui/AppButton";
 import {AntDesign} from "@expo/vector-icons";
 import {DeleteAlert} from "../components/ui/DeleteAlert";
+import {TodoContext} from "../context/todo/todoContext";
+import {ScreenContext} from "../context/screen/screenContext";
 
-export const ToDoScreen = ({todo, goBack, removeTodo, updateTodo}) => {
+export const ToDoScreen = () => {
+    const {removeTodo, updateTodo} = useContext(TodoContext);
+    const {selectedTodo: todo, isSelected, resetTodo: goBack} = useContext(ScreenContext);
 
     const [modal, setModal] = useState(false);
 
-    return (
+    return isSelected && (
         <View style={styles.container}>
             <EditModal
                 value={todo.title}
