@@ -8,9 +8,9 @@ import {ToDoScreen} from "./screens/ToDoScreen";
 export const MainLayout = () => {
 
     return (
-        <View>
+        <View style={styles.container}>
             <NavBar/>
-            <View style={styles.container}>
+            <View style={styles.screen}>
                 <MainScreen/>
                 <ToDoScreen/>
             </View>
@@ -20,7 +20,11 @@ export const MainLayout = () => {
 
 const styles = StyleSheet.create({
     container: {
-        margin: 10
+        flex: 1
+    },
+    screen: {
+        margin: 10,
+        flex: 1
     }
 });
 
