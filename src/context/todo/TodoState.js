@@ -12,6 +12,7 @@ import {
     UPDATE_TODO
 } from "../types";
 import {ScreenContext} from "../screen/screenContext";
+import {Api} from "../../services/api";
 
 const initialState = {
     todos: [],
@@ -23,52 +24,55 @@ export const TodoState = ({children}) => {
     const [state, dispatch] = useReducer(todoReducer, initialState);
     const {resetTodo} = useContext(ScreenContext);
 
-    const fetchTodos = async () => {
+    const callApi = (methodApi) => {
         clearError();
         showLoader();
-        try {
-            const response = await fetch('https://rn-todo-app-c4323-default-rtdb.firebaseio.com/todos.json1', {
-                'method': 'GET',
-                'headers': {
-                    'Content-Type': 'application/json'
-                }
-            });
-            const data = await response.json();
-            const todos = Object.keys(data).map(key => ({...data[key], id: key}));
-            dispatch({type: FETCH_TODOS, payload: todos});
-            console.log('Fetch todos', todos);
-        } catch (e) {
-            showError(e);
-            console.log(e);
-        } finally {
-            hideLoader();
-        }
+        methodApi()
+            .catch(error => showError(error))
+            .finally(() => hideLoader());
     }
 
-    const addTodo = async title => {
-        const response = await fetch('https://rn-todo-app-c4323-default-rtdb.firebaseio.com/todos.json',{
-            'method': 'POST',
-            'headers': {
-                'Content-Type': 'application/json'
-            },
-            'body': JSON.stringify({
-                title
+    const fetchTodos = () => {
+
+        callApi(() => Api.getTodos()
+            .then(data => {
+                const todos = Object.keys(data).map(key => ({...data[key], id: key}));
+                dispatch({type: FETCH_TODOS, payload: todos});
             })
-        });
-        const data = await response.json();
-        console.log(data);
-        dispatch({type: ADD_TODO, payload: {id: data.name, title}});
+        );
     }
-    const updateTodo = (id, title) => dispatch({type: UPDATE_TODO, payload: {id, title}});
+
+    const addTodo = title => {
+
+        callApi(() => Api.addTodo({title})
+            .then(data => {
+                dispatch({type: ADD_TODO, payload: {id: data.name, title}});
+            })
+        );
+    }
+
+    const updateTodo = (id, title) => {
+
+        callApi(() => Api.updateTodo(id, {title})
+            .then(() => {
+                dispatch({type: UPDATE_TODO, payload: {id, title}});
+            })
+        );
+    }
     const removeTodo = id => {
-        resetTodo();
-        dispatch({type: REMOVE_TODO, payload: {id}});
+
+        callApi(() => Api.removeTodo(id)
+            .then(() => {
+                resetTodo();
+                dispatch({type: REMOVE_TODO, payload: {id}});
+            })
+        );
+
     };
     const showLoader = () => dispatch({type: SHOW_LOADER});
     const hideLoader = () => dispatch({type: HIDE_LOADER});
     const showError = (error) => dispatch({type: SHOW_ERROR, payload: {error}});
     const clearError = () => dispatch({type: CLEAR_ERROR});
-
 
     return (
         <TodoContext.Provider value={{
@@ -78,7 +82,7 @@ export const TodoState = ({children}) => {
             addTodo,
             updateTodo,
             removeTodo,
-            fetchTodos,
+            fetchTodos/*: callApi(fetchTodos)*/,
             clearError
         }}>
             {children}

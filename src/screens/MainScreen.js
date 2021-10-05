@@ -1,5 +1,5 @@
-import React, {useContext, useEffect, useCallback} from "react";
-import {FlatList, Image, StyleSheet, View, Text} from "react-native";
+import React, {useCallback, useContext, useEffect} from "react";
+import {FlatList, Image, StyleSheet, View} from "react-native";
 import {AddToDo} from "../components/AddToDo";
 import {ToDo} from "../components/ToDo";
 import {TodoContext} from "../context/todo/todoContext";
@@ -8,7 +8,7 @@ import {AppLoader} from "../components/ui/AppLoader";
 import {AppError} from "../components/ui/AppError";
 
 export const MainScreen = () => {
-    const {todos, addTodo, removeTodo, fetchTodos, clearError, loading, error} = useContext(TodoContext);
+    const {todos, addTodo, removeTodo, fetchTodos, loading, error} = useContext(TodoContext);
     const {isSelected, selectTodo} = useContext(ScreenContext);
 
     const loadTodos = useCallback(async () => await fetchTodos(), [fetchTodos]);
@@ -23,16 +23,19 @@ export const MainScreen = () => {
         onSelect={selectTodo}
     />;
 
-    if (loading){
+    if (isSelected){
+        return null;
+    }
+
+    if (loading) {
         return <AppLoader/>;
     }
 
-    if (error){
-        return (<AppError onReset={loadTodos}/>);
+    if (error) {
+        return (<AppError onReset={loadTodos}>{error}</AppError>);
     }
 
-
-    return !isSelected && (
+    return (
         <View style={styles.container}>
             <AddToDo onAddTodo={addTodo}/>
             {todos && <FlatList style={styles.list}
@@ -41,9 +44,9 @@ export const MainScreen = () => {
                 renderItem={renderItem}
             />}
             {todos.length === 0 && <View style={styles.imageWrap}>
-                <Image style={styles.emptyImage} source={require("../../assets/empty.jpg")}/>
+                <Image source={require("../../assets/empty.jpg")}/>
             </View>}
-        </View>)
+        </View>);
 }
 
 const styles = StyleSheet.create({

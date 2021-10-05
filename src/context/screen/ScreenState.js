@@ -17,7 +17,7 @@ const ScreenState = ({children}) => {
 
     return (
         <ScreenContext.Provider value={{
-            selectedTodo: state.selectedTodo,
+            todo: state.selectedTodo,
             selectTodo,
             resetTodo,
             isSelected

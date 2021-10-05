@@ -6,16 +6,24 @@ import {AntDesign} from "@expo/vector-icons";
 
 export const EditModal = ({value, isVisible, onCancel, onSave}) => {
     const [text, setText] = useState(value);
+
     const cancelHandler = () => {
         onCancel();
+    }
+    const saveHandler = () => {
+        onSave(text);
+    }
+    const showHandler = () => {
         setText(value);
     }
+
     return (
         <Modal
             animationType="fade"
             visible={isVisible}
             transparent={false}
             presentationStyle="overFullScreen"
+            onShow={showHandler}
         >
             <View style={styles.container}>
                 <TextInput
@@ -27,7 +35,7 @@ export const EditModal = ({value, isVisible, onCancel, onSave}) => {
                     onChangeText={setText}
                 />
                 <View style={styles.buttons}>
-                    <AppButton style={styles.button} onPress={() => onSave(text)} color={THEME.EDIT_BUTTON_COLOR}>
+                    <AppButton style={styles.button} onPress={saveHandler} color={THEME.EDIT_BUTTON_COLOR}>
                         <AntDesign name="checkcircleo" size={24}/>
                     </AppButton>
                     <AppButton style={styles.button} onPress={cancelHandler} color={THEME.DANGER_COLOR}>

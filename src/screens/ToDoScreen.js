@@ -10,10 +10,20 @@ import {TodoContext} from "../context/todo/todoContext";
 import {ScreenContext} from "../context/screen/screenContext";
 
 export const ToDoScreen = () => {
-    const {removeTodo, updateTodo} = useContext(TodoContext);
-    const {selectedTodo: todo, isSelected, resetTodo: goBack} = useContext(ScreenContext);
+    const {removeTodo, updateTodo, error, clearError} = useContext(TodoContext);
+    const {todo, isSelected, resetTodo} = useContext(ScreenContext);
 
     const [modal, setModal] = useState(false);
+
+    const saveHandler = title => {
+        updateTodo(todo.id, title);
+        setModal(false);
+    }
+
+    const goBackHandler = () => {
+        clearError();
+        resetTodo();
+    }
 
     return isSelected && (
         <View style={styles.container}>
@@ -21,10 +31,8 @@ export const ToDoScreen = () => {
                 value={todo.title}
                 isVisible={modal}
                 onCancel={() => setModal(false)}
-                onSave={title => {
-                    updateTodo(todo.id, title);
-                    setModal(false);
-                }}
+                onSave={saveHandler}
+                error={error}
             />
             <View style={styles.card}>
                 <AppTextBold>{todo.title}</AppTextBold>
@@ -39,7 +47,8 @@ export const ToDoScreen = () => {
                     </AppButton>
                 </View>
             </View>
-            <AppButton onPress={goBack} color={THEME.GO_BACK_COLOR}><AntDesign name="back"/></AppButton>
+            {error && <AppTextBold color={THEME.DANGER_COLOR}>Error - {error}</AppTextBold>}
+            <AppButton onPress={goBackHandler} color={THEME.GO_BACK_COLOR}><AntDesign name="back"/></AppButton>
         </View>
     );
 }
